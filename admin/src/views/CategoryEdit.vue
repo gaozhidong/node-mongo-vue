@@ -25,7 +25,14 @@ export default {
   methods: {
     async save() {
       /* eslint-disable */
-      const res = await this.$http.post("categories", this.model);
+      let res;
+
+      if (this.id) {
+        res = await this.$http.put(`categories/${this.id}`, this.model);
+      } else {
+        res = await this.$http.post("categories", this.model);
+      }
+
       // console.log(res);
       this.$router.push("/categories/list");
       this.$message({
