@@ -4,8 +4,13 @@
   <el-table :data="items">
     <el-table-column prop="_id" label="ID" width="320"></el-table-column>
     <el-table-column prop="name" label="分类名称"></el-table-column>
-    <el-table-column prop="createTime" label="创建时间">
-      
+    <el-table-column prop="createTime" label="创建时间"></el-table-column>
+    <el-table-column label="操作">
+      <template slot-scope="scope">
+        <el-button type="text" @click="$router.push(`/categories/edit/${scope.row._id}`)">
+            操作
+        </el-button>
+      </template>
     </el-table-column>
   </el-table>
   </div>
