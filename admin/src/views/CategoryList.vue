@@ -10,6 +10,9 @@
         <el-button type="text" @click="$router.push(`/categories/edit/${scope.row._id}`)">
             操作
         </el-button>
+        <el-button type="text" @click="remove(scope.row)">
+            删除
+        </el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -28,8 +31,21 @@
       async fetch(){
         const res =  await this.$http.get('categories')
         this.items = res.data
+      },
+      async remove(row){
+        this.$confirm(`是否确认删除分类${row.name}`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(async() => {
+          const res = await this.$http.delete(`categories/${row._id}`)
+          this.$message({
+            type: 'success',
+            message: '删除成功!',
+          });
+          this.fetch()
+        }).catch(() => {})
       }
-      
     },
     created() {
       this.fetch()
