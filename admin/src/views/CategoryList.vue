@@ -30,7 +30,7 @@
     },
     methods: {
       async fetch(){
-        const res =  await this.$http.get('categories/rest')
+        const res =  await this.$http.get('rest/categories')
         this.items = res.data
       },
       async remove(row){
@@ -39,7 +39,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(async() => {
-          const res = await this.$http.delete(`categories/rest/${row._id}`)
+          const res = await this.$http.delete(`rest/categories/${row._id}`)
           this.$message({
             type: 'success',
             message: '删除成功!',
