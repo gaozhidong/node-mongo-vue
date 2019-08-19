@@ -4,27 +4,27 @@ module.exports = app => {
     mergeParams: true,
   })
 
-  // 提交分类 create
+  // 提交 create
   router.post('/', async (req, res) => {
     const model = await req.Model.create(req.body)
     res.send(model)
   })
 
-  // 更新分类  findByIdAndUpdate
+  // 更新  findByIdAndUpdate
   router.put('/:id', async (req, res) => {
     const model = await req.Model.findByIdAndUpdate(req.params.id, req.body)
     res.send(model)
   })
   
-  //删除分类 findByIdAndDelete
+  //删除 findByIdAndDelete
   router.delete('/:id', async (req, res) => {
-    const model = await req.Model.findByIdAndDelete(req.params.id, req.body)
+    await req.Model.findByIdAndDelete(req.params.id, req.body)
     res.send({
       success: true,
     })
   })
 
-  // 获取分类列表 find
+  // 获取列表 find
   router.get('/', async (req, res) => {
     const items = await req.Model.find().populate('parent').limit(10)
     res.send(items)
