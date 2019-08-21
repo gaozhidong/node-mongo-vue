@@ -51,6 +51,7 @@ module.exports = app => {
   // upload.single()  单个文件的上传
   app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
     const file = req.file
+    file.url = `http://localhost:3333/uploads/${file.filename}`
     res.send(file)
   })
 
