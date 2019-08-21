@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     handleAvatarSuccess(res) {
-      console.log(res)
+      this.$set(this.model,'icon',res.url)
     },
     async save() {
       /* eslint-disable */
