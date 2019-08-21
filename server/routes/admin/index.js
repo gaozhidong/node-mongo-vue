@@ -15,7 +15,7 @@ module.exports = app => {
     const model = await req.Model.findByIdAndUpdate(req.params.id, req.body)
     res.send(model)
   })
-  
+
   //删除 findByIdAndDelete
   router.delete('/:id', async (req, res) => {
     await req.Model.findByIdAndDelete(req.params.id, req.body)
@@ -27,7 +27,7 @@ module.exports = app => {
   // 获取列表 find
   router.get('/', async (req, res) => {
     const queryOptions = {}
-    if(req.Model.modelName === 'Category'){
+    if (req.Model.modelName === 'Category') {
       queryOptions.populate = 'parent'
     }
     const items = await req.Model.find().setOptions(queryOptions).limit(10)
@@ -40,9 +40,18 @@ module.exports = app => {
     res.send(model)
   })
 
-  app.use('/admin/api/rest/:resource',async(req,res,next)=>{
+  app.use('/admin/api/rest/:resource', async (req, res, next) => {
     const modelName = require('inflection').classify(req.params.resource)
     req.Model = require(`../../modules/${modelName}`)
     next()
   }, router)
+
+  const multer = require('multer')
+  const upload = multer({ dest: __dirname + '/../../uploads' })
+  // upload.single()  单个文件的上传
+  app.post('/admin/api/upload', upload.single('file'), async (req, res) => {
+    const file = req.file
+    res.send(file)
+  })
+
 }
