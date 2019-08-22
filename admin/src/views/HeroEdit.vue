@@ -12,7 +12,7 @@
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
         >
-          <img v-if="model.icon" :src="model.icon" class="avatar" />
+          <img v-if="model.avatar" :src="model.avatar" class="avatar" />
           <i v-else class="el-icon-plus avatar-uploader-icon"></i>
         </el-upload>
       </el-form-item>
@@ -30,12 +30,15 @@ export default {
   },
   data() {
     return {
-      model: {}
+      model: {
+        name: '',
+        avatar: ''
+      }
     };
   },
   methods: {
     handleAvatarSuccess(res) {
-      this.$set(this.model,'icon',res.url)
+      this.model.avatar = res.url
     },
     async save() {
       /* eslint-disable */
