@@ -2,10 +2,10 @@
   <div>
     <h2>{{ id ? '编辑' : '创建' }}英雄</h2>
     <el-form label-width="120px" @submit.native.prevent="save">
-      <el-form-item label="名称">
+      <el-form-item label="英雄名称">
         <el-input v-model="model.name"></el-input>
       </el-form-item>
-      <el-form-item label="图标">
+      <el-form-item label="头像">
         <el-upload
           class="avatar-uploader"
           :action="$http.defaults.baseURL + '/upload'"
@@ -45,20 +45,20 @@ export default {
       let res;
 
       if (this.id) {
-        res = await this.$http.put(`rest/items/${this.id}`, this.model);
+        res = await this.$http.put(`rest/heroes/${this.id}`, this.model);
       } else {
-        res = await this.$http.post("rest/items", this.model);
+        res = await this.$http.post("rest/heroes", this.model);
       }
 
       // console.log(res);
-      this.$router.push("/items/list");
+      this.$router.push("/heroes/list");
       this.$message({
         type: "success",
         message: "提交成功了"
       });
     },
     async fetch() {
-      const res = await this.$http.get(`rest/items/${this.id}`);
+      const res = await this.$http.get(`rest/heroes/${this.id}`);
       this.model = res.data;
     }
   },

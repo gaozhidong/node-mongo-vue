@@ -1,9 +1,9 @@
 <template>
   <div>
   英雄列表 
-  <el-table :data="heroes">
+  <el-table :data="items">
     <el-table-column prop="_id" label="ID" width="320"></el-table-column>
-    <el-table-column prop="name" label="物品名称"></el-table-column>
+    <el-table-column prop="name" label="英雄名称"></el-table-column>
     <el-table-column prop="avatar" label="头像">
       <template slot-scope="scope">
         <img :src="scope.row.avatar" style="height:3rem">
@@ -29,13 +29,13 @@
   export default {
     data () {
       return {
-        heroes:[],
+        items:[],
       }
     },
     methods: {
       async fetch(){
         const res =  await this.$http.get('rest/heroes')
-        this.heroes = res.data
+        this.items = res.data
       },
       async remove(row){
         this.$confirm(`是否确认删除分类${row.name}`, '提示', {
