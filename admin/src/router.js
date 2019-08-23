@@ -10,7 +10,9 @@ import ItemList from './views/ItemList.vue'
 // 英雄
 import HeroEdit from './views/HeroEdit.vue'
 import HeroList from './views/HeroList.vue'
-
+// 文章
+import ArticleEdit from './views/ArticleEdit.vue'
+import ArticleList from './views/ArticleList.vue'
 Vue.use(Router)
 
 export default new Router({
@@ -61,6 +63,20 @@ export default new Router({
         {
           path: '/heroes/list',
           component: HeroList
+        },
+         // 文章
+         {
+          path: '/articles/create',
+          component: ArticleEdit
+        },
+        {
+          path: '/articles/edit/:id',
+          component: ArticleEdit,
+          props: true,
+        },
+        {
+          path: '/articles/list',
+          component: ArticleList
         },
       ]
     },
