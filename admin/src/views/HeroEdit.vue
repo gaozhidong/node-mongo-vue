@@ -119,6 +119,7 @@ export default {
       items: [], //装备列表
       model: {
         name: "",
+        skills: [],
         avatar: "",
         scores: {
           difficult: 0
