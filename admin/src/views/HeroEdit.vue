@@ -72,7 +72,7 @@
             添加技能
           </el-button>
           <el-row type="flex" style="flex-wrap:wrap">
-            <el-col :md="12" v-for="(item,index) in model.skills" :key="index">
+            <el-col :md="24" v-for="(item,index) in model.skills" :key="index">
               <el-form-item label="名称">
                 <el-input v-model="item.name"></el-input>
               </el-form-item>
