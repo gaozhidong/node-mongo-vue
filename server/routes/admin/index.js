@@ -26,12 +26,25 @@ module.exports = app => {
 
   // 获取列表 find
   router.get('/', async (req, res) => {
+    let pageNum = parseInt(req.query.pageNum) || 1 // 转换前端传入当前页码
+    let pageSize = parseInt(req.query.pageSize) || 10 // 转换前端传入的每页大小
+    let skip = (pageNum - 1) * pageSize // 实现分割查询的skip
+
     const queryOptions = {}
     if (req.Model.modelName === 'Category') {
       queryOptions.populate = 'parent'
     }
-    const items = await req.Model.find().setOptions(queryOptions).limit(10)
-    res.send(items)
+
+    const items = await req.Model.find().setOptions(queryOptions).skip(skip).limit(pageSize)
+    let all = items.length
+    // res.send(items)
+    res.json({
+      status: 0,
+      message: '请求成功',
+      total: all,
+      list: items
+    })
+
   })
 
   //获取详情 findById
