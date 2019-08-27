@@ -34,8 +34,8 @@
     },
     methods: {
       async fetch(){
-        const res =  await this.$http.get('rest/items')
-        this.items = res.data
+        const res =  await this.$http.get('rest/items?pagesize=10&pageNum=1')
+        this.items = res.data.list
       },
       async remove(row){
         this.$confirm(`是否确认删除分类${row.name}`, '提示', {
