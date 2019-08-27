@@ -42,7 +42,6 @@ export default {
   },
   methods: {
     async handleImageAdded(file, Editro, cursorLocation, resetUploader) {
-      console.log('x')
       const formData = new FormData();
       formData.append("file", file);
       const res = await this.$http.post('upload',formData)
