@@ -4,6 +4,17 @@ const http = axios.create({
   baseURL: 'http://localhost:3333/admin/api'
 })
 
+
+http.interceptors.request.use((config)=>{
+
+  config.headers.Authorization = "Bearer" + localStorage.token
+
+  return config
+},(err)=>{
+  return Promise.reject(err)
+})
+
+
 http.interceptors.response.use((res)=>{
   return res
 }, err=>{
@@ -13,7 +24,7 @@ http.interceptors.response.use((res)=>{
       message: err.response.data.message
     })
   }
-  
+
   return Promise.reject(err)
 })
 export default http
