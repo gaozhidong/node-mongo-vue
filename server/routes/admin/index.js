@@ -29,7 +29,19 @@ module.exports = app => {
   })
 
   // 获取列表 find
-  router.get('/', async (req, res) => {
+  router.get('/', async (req, res, next) => {
+
+    const token = String(req.headers.authorization || '').split(' ').pop() //后端使用小写来获取
+    assert(token, 401, '请先登录')
+
+    const { id } = jwt.verify(token, app.get('secret'))
+    assert(id, 401, '请先登录')
+    req.user = await AdminUser.findById(id) //挂载到req上，在后续可以使用
+
+    assert(req.user, 401, '用户不存在')
+
+    await next()
+  }, async (req, res) => {
     let pageNum = parseInt(req.query.pageNum) || 1 // 转换前端传入当前页码
     let pageSize = parseInt(req.query.pageSize) || 10 // 转换前端传入的每页大小
     let skip = (pageNum - 1) * pageSize // 实现分割查询的skip
@@ -75,38 +87,27 @@ module.exports = app => {
 
   app.post('/admin/api/login', async (req, res) => {
     const { username, password } = req.body
-    
-    const AdminUser = require('../../modules/AdminUser')
-
     const user = await AdminUser.findOne({ username }).select('+password')
-  // 根据用户名找用户
-  assert(user,422,'用户不存在')
-    // if (!user) {
-    //   return res.status(422).send({
-    //     message: '用户不存在'
-    //   })
-    // }
+    // 根据用户名找用户
+    assert(user, 422, '用户不存在')
 
     const isValid = require('bcrypt').compareSync(password, user.password)
+
     // 校验密码
-    assert(isValid,422,'密码错误')
-    // if (!isValid) {
-    //   return res.status(422).send({
-    //     message: '密码错误'
-    //   })
-    // }
+    assert(isValid, 422, '密码错误')
+
     // 返回token
-    const jwt = require('jsonwebtoken')
-    const token =  jwt.sign({id: user._id, }, app.get('secret'))
-    
-    res.send({token})
+    const token = jwt.sign({ id: user._id, }, app.get('secret'))
+
+    res.send({ token })
 
   })
 
   // 错误处理
 
-  app.use(async(err,req,res,next)=>{
-    res.status(err.status.code).send({
+  app.use(async (err, req, res, next) => {
+    console.log(err)
+    res.status(err.status.code || 500).send({
       message: err.message
     })
   })
