@@ -1,5 +1,9 @@
 module.exports = app => {
   const express = require('express')
+  const jwt = require('jsonwebtoken')
+  const AdminUser = require('../../modules/AdminUser')
+  const assert = require('http-assert')
+
   const router = express.Router({
     mergeParams: true,
   })
@@ -76,19 +80,21 @@ module.exports = app => {
 
     const user = await AdminUser.findOne({ username }).select('+password')
   // 根据用户名找用户
-    if (!user) {
-      return res.status(422).send({
-        message: '用户不存在'
-      })
-    }
+  assert(user,422,'用户不存在')
+    // if (!user) {
+    //   return res.status(422).send({
+    //     message: '用户不存在'
+    //   })
+    // }
 
     const isValid = require('bcrypt').compareSync(password, user.password)
     // 校验密码
-    if (!isValid) {
-      return res.status(422).send({
-        message: '密码错误'
-      })
-    }
+    assert(isValid,422,'密码错误')
+    // if (!isValid) {
+    //   return res.status(422).send({
+    //     message: '密码错误'
+    //   })
+    // }
     // 返回token
     const jwt = require('jsonwebtoken')
     const token =  jwt.sign({id: user._id, }, app.get('secret'))
@@ -97,4 +103,11 @@ module.exports = app => {
 
   })
 
+  // 错误处理
+
+  app.use(async(err,req,res,next)=>{
+    res.status(err.status.code).send({
+      message: err.message
+    })
+  })
 }
