@@ -7,8 +7,9 @@ const http = axios.create({
 
 http.interceptors.request.use((config)=>{
 
-  config.headers.Authorization = "Bearer" + localStorage.token
-
+  if(localStorage.token){
+    config.headers.Authorization = "Bearer" + localStorage.token || ''
+  }
   return config
 },(err)=>{
   return Promise.reject(err)
