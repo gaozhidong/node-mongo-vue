@@ -1,32 +1,13 @@
 module.exports = app => {
   const express = require('express')
-  const jwt = require('jsonwebtoken')
-  const AdminUser = require('../../modules/AdminUser')
-  const assert = require('http-assert')
 
   const router = express.Router({
     mergeParams: true,
   })
   // 登录校验中间件
-  const authMiddleware = async (req, res, next) => {
-
-    const token = String(req.headers.authorization || '').split(' ').pop() //后端使用小写来获取
-    assert(token, 401, '请先登录')
-
-    const { id } = jwt.verify(token, app.get('secret'))
-    assert(id, 401, '请先登录')
-    req.user = await AdminUser.findById(id) //挂载到req上，在后续可以使用
-
-    assert(req.user, 401, '用户不存在')
-
-    await next()
-  }
+  const authMiddleware = require('../../middleware/auth')
   //获取model中间件
-  const resourceMiddleware = async (req, res, next) => {
-    const modelName = require('inflection').classify(req.params.resource)
-    req.Model = require(`../../modules/${modelName}`)
-    next()
-  }
+  const resourceMiddleware = require('../../middleware/resource')
 
   // 提交 create
   router.post('/', async (req, res) => {
@@ -77,13 +58,13 @@ module.exports = app => {
     res.send(model)
   })
 
-  app.use('/admin/api/rest/:resource', authMiddleware, resourceMiddleware, router)
+  app.use('/admin/api/rest/:resource', authMiddleware(), resourceMiddleware(), router)
 
   const multer = require('multer')
   const upload = multer({ dest: __dirname + '/../../uploads' })
-  
+
   // upload.single()  单个文件的上传
-  app.post('/admin/api/upload', authMiddleware, upload.single('file'), async (req, res) => {
+  app.post('/admin/api/upload', authMiddleware(), upload.single('file'), async (req, res) => {
     const file = req.file
     file.url = `http://localhost:3333/uploads/${file.filename}`
     res.send(file)
