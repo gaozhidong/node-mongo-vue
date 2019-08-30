@@ -30,7 +30,7 @@
     methods: {
       async fetch(){
         const res =  await this.$http.get('rest/articles')
-        this.items = res.data
+        this.items = res.data.list
       },
       async remove(row){
         this.$confirm(`是否确认删除文章${row.title}`, '提示', {

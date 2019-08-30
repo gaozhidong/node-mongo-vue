@@ -31,7 +31,7 @@
     methods: {
       async fetch(){
         const res =  await this.$http.get('rest/categories')
-        this.items = res.data
+        this.items = res.data.list
       },
       async remove(row){
         this.$confirm(`是否确认删除分类${row.name}`, '提示', {
