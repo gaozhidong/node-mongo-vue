@@ -29,19 +29,7 @@ module.exports = app => {
   })
 
   // 获取列表 find
-  router.get('/', async (req, res, next) => {
-
-    const token = String(req.headers.authorization || '').split(' ').pop() //后端使用小写来获取
-    assert(token, 401, '请先登录')
-
-    const { id } = jwt.verify(token, app.get('secret'))
-    assert(id, 401, '请先登录')
-    req.user = await AdminUser.findById(id) //挂载到req上，在后续可以使用
-
-    assert(req.user, 401, '用户不存在')
-
-    await next()
-  }, async (req, res) => {
+  router.get('/', async (req, res) => {
     let pageNum = parseInt(req.query.pageNum) || 1 // 转换前端传入当前页码
     let pageSize = parseInt(req.query.pageSize) || 10 // 转换前端传入的每页大小
     let skip = (pageNum - 1) * pageSize // 实现分割查询的skip
@@ -69,7 +57,19 @@ module.exports = app => {
     res.send(model)
   })
 
-  app.use('/admin/api/rest/:resource', async (req, res, next) => {
+  app.use('/admin/api/rest/:resource', async (req, res, next) => { //获取登录状态 中间件
+
+    const token = String(req.headers.authorization || '').split(' ').pop() //后端使用小写来获取
+    assert(token, 401, '请先登录')
+
+    const { id } = jwt.verify(token, app.get('secret'))
+    assert(id, 401, '请先登录')
+    req.user = await AdminUser.findById(id) //挂载到req上，在后续可以使用
+
+    assert(req.user, 401, '用户不存在')
+
+    await next()
+  }, async (req, res, next) => { //获取model中间件
     const modelName = require('inflection').classify(req.params.resource)
     req.Model = require(`../../modules/${modelName}`)
     next()
