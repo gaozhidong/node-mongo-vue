@@ -4,6 +4,7 @@
 
 * 使用vue cli3 创建项目
 * 使用element ui
+* 使用axios对接口请求进行封装
 
 ### server 接口服务
 
