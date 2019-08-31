@@ -15,5 +15,3 @@
   "serve": "nodemon index.js"
 }
 ```
-
-### web 展示页面
